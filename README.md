@@ -75,7 +75,7 @@ Download the latest `TallyLens-Setup-x.x.x.exe` from the [GitHub Releases](https
 ### Method 2: Run via npx / npm CLI
 If published to npm, you can launch the app directly from your terminal:
 ```bash
-npx tally-lens
+npx @engineeringechoes/tally-lens
 ```
 
 ### Method 3: Clone & Run from Source
