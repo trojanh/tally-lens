@@ -12,6 +12,14 @@
     "dist-electron",
     "bin"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trojanh/tally-lens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/trojanh/tally-lens/issues"
+  },
+  "homepage": "https://github.com/trojanh/tally-lens#readme",
   "scripts": {
     "dev": "vite",
     "start": "electron .",
