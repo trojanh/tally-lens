@@ -1,11 +1,11 @@
 {
-  "name": "tally-bill-sync",
+  "name": "tally-lens",
   "version": "1.0.0",
   "type": "module",
   "description": "Windows Desktop App for extracting Image Bills and syncing/exporting to TallyPrime / Tally.ERP 9",
   "main": "dist-electron/main.js",
   "bin": {
-    "tally-bill-sync": "./bin/cli.js"
+    "tally-lens": "./bin/cli.js"
   },
   "scripts": {
     "dev": "vite",

@@ -1,5 +1,5 @@
-appId: com.antigravity.tallybillsync
-productName: TallyBillSync
+appId: com.antigravity.tallylens
+productName: TallyLens
 copyright: Copyright © 2026 Antigravity
 directories:
   output: release
@@ -23,4 +23,4 @@ nsis:
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: always
   createStartMenuShortcut: true
-  shortcutName: TallyBillSync
+  shortcutName: TallyLens

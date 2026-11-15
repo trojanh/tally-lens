@@ -11,7 +11,7 @@ function createWindow() {
     height: 840,
     minWidth: 1024,
     minHeight: 700,
-    title: 'TallyBillSync - Image Bill to Tally Importer',
+    title: 'TallyLens - Image Bill to Tally Importer',
     backgroundColor: '#0f172a',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

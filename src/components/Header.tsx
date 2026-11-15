@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <h1 className="font-bold text-slate-100 tracking-tight text-base">TallyBillSync</h1>
+            <h1 className="font-bold text-slate-100 tracking-tight text-base">TallyLens</h1>
             <span className="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               Windows App
             </span>

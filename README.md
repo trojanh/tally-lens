@@ -1,4 +1,4 @@
-# TallyBillSync 🧾⚡
+# TallyLens 🔍⚡
 
 > **Windows Desktop Application for Extracting Image Bills via 100% Offline Local OCR & Syncing directly into TallyPrime / Tally.ERP 9.**
 
@@ -14,7 +14,7 @@
 
 Entering purchase bills, expense receipts, and vendor cash memos into **Tally** is notoriously slow, repetitive, and error-prone. 
 
-**TallyBillSync** eliminates manual data entry by extracting receipt data directly from images using **100% offline local OCR**. It verifies GSTINs, splits CGST/SGST vs IGST based on place of supply, verifies mathematical balances, and syncs the voucher directly into Tally's active company with **one click** — or exports standard Tally XML and Excel files.
+**TallyLens** eliminates manual data entry by extracting receipt data directly from images using **100% offline local OCR**. It verifies GSTINs, splits CGST/SGST vs IGST based on place of supply, verifies mathematical balances, and syncs the voucher directly into Tally's active company with **one click** — or exports standard Tally XML and Excel files.
 
 ---
 
@@ -59,7 +59,7 @@ To use 1-Click Direct Sync, TallyPrime needs its built-in XML Server active:
    - Set **Port:** to `9000`.
 4. Accept changes (`Ctrl + A`) and restart Tally.
 5. Open your company in Tally.
-6. In **TallyBillSync**, click **Test Connection** in the top bar. A green badge will confirm your active company!
+6. In **TallyLens**, click **Test Connection** in the top bar. A green badge will confirm your active company!
 
 ---
 
@@ -70,20 +70,20 @@ To use 1-Click Direct Sync, TallyPrime needs its built-in XML Server active:
 - Node.js (v18.0.0 or higher) & npm
 
 ### Method 1: Download Windows Executable (.exe)
-Download the latest `TallyBillSync-Setup-x.x.x.exe` from the [GitHub Releases](https://github.com) page and double-click to install.
+Download the latest `TallyLens-Setup-x.x.x.exe` from the [GitHub Releases](https://github.com) page and double-click to install.
 
 ### Method 2: Run via npx / npm CLI
 If published to npm, you can launch the app directly from your terminal:
 ```bash
-npx tally-bill-sync
+npx tally-lens
 ```
 
 ### Method 3: Clone & Run from Source
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/<your-username>/tally-bill-sync.git
-   cd tally-bill-sync
+   git clone https://github.com/<your-username>/tally-lens.git
+   cd tally-lens
    ```
 
 2. **Install dependencies:**
@@ -112,8 +112,8 @@ npm run build:win
 ```
 
 The output executables will be created in the `release/` folder:
-- `release/TallyBillSync-Setup-1.0.0.exe` (Windows NSIS Setup installer)
-- `release/TallyBillSync 1.0.0.exe` (Portable executable - runs without installation)
+- `release/TallyLens-Setup-1.0.0.exe` (Windows NSIS Setup installer)
+- `release/TallyLens 1.0.0.exe` (Portable executable - runs without installation)
 
 ---
 
@@ -143,13 +143,13 @@ An npm publishing workflow (`.github/workflows/npm-publish.yml`) is also include
 ## 📁 Architecture & File Layout
 
 ```
-tally-bill-sync/
+tally-lens/
 ├── .github/workflows/
 │   ├── ci.yml                 # Automated test & build verification on push/PR
 │   ├── build-and-release.yml  # Windows .exe builder and GitHub Releases publisher
 │   └── npm-publish.yml        # Automated npm registry publisher
 ├── bin/
-│   └── cli.js                 # CLI launcher for `npx tally-bill-sync`
+│   └── cli.js                 # CLI launcher for `npx tally-lens`
 ├── electron/
 │   ├── main.ts                # Electron window lifecycle, native dialogs, Tally HTTP proxy
 │   └── preload.ts             # Secure contextBridge API for IPC
