@@ -7,6 +7,11 @@
   "bin": {
     "tally-lens": "./bin/cli.js"
   },
+  "files": [
+    "dist",
+    "dist-electron",
+    "bin"
+  ],
   "scripts": {
     "dev": "vite",
     "start": "electron .",
