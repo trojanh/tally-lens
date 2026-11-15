@@ -1,0 +1,26 @@
+appId: com.antigravity.tallybillsync
+productName: TallyBillSync
+copyright: Copyright © 2026 Antigravity
+directories:
+  output: release
+  buildResources: build
+files:
+  - "dist/**/*"
+  - "dist-electron/**/*"
+  - "package.json"
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: "${productName}-Setup-${version}.${ext}"
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: TallyBillSync
