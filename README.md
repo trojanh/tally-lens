@@ -1,125 +1,187 @@
 # TallyBillSync 🧾⚡
 
-**TallyBillSync** is a modern Windows desktop application designed for Indian accountants, tax practitioners, and business owners. It automates capturing image bills (receipts, cash memos, tax invoices) using **100% offline local OCR**, verifies line items and GST calculations, and syncs the vouchers directly back into **TallyPrime** and **Tally.ERP 9** or exports them as Tally-compliant XML/Excel files.
+> **Windows Desktop Application for Extracting Image Bills via 100% Offline Local OCR & Syncing directly into TallyPrime / Tally.ERP 9.**
+
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)](https://github.com)
+[![Engine: Electron](https://img.shields.io/badge/Engine-Electron%2033-47848F?logo=electron&logoColor=white)](https://electronjs.org)
+[![Frontend: React + Vite](https://img.shields.io/badge/Frontend-React%20%7C%20Vite-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![Target: TallyPrime](https://img.shields.io/badge/Accounting-TallyPrime%20%2F%20ERP%209-15803D)](https://tallysolutions.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+---
+
+## 📌 Overview
+
+Entering purchase bills, expense receipts, and vendor cash memos into **Tally** is notoriously slow, repetitive, and error-prone. 
+
+**TallyBillSync** eliminates manual data entry by extracting receipt data directly from images using **100% offline local OCR**. It verifies GSTINs, splits CGST/SGST vs IGST based on place of supply, verifies mathematical balances, and syncs the voucher directly into Tally's active company with **one click** — or exports standard Tally XML and Excel files.
 
 ---
 
 ## 🌟 Key Features
 
-### 1. 100% Offline Local OCR Engine
-- **Air-Gapped & Private:** Uses local Tesseract.js WebAssembly OCR running directly on your Windows PC. No invoice images or sensitive financial data are ever sent to third-party cloud servers.
-- **Image Preprocessing:** Automatic contrast boosting, luminance thresholding, and grayscale conversion for low-quality photos and thermal paper receipts.
-- **Visual Enhancement Filters:** Built-in viewer with Pan, Zoom, 90° Rotation, High Contrast mode, and Inverted/Negative mode to read faint or faded cash receipts.
-
-### 2. Smart Indian GST & Invoice Parser
-- **GSTIN Extraction & Validation:** Detects 15-character GST numbers and extracts 2-digit state codes (e.g. `27` for Maharashtra, `29` for Karnataka, `07` for Delhi).
-- **Intra-State vs Inter-State Logic:** Compares the supplier's state code against your company's state code to automatically determine tax routing:
-  - Same state: **CGST + SGST** (split 50/50)
-  - Different state: **IGST**
-- **Line Items & HSN/SAC:** Extracts descriptions, quantities, unit prices, HSN codes, and GST rates (0%, 5%, 12%, 18%, 28%).
-- **Live Arithmetic Balancing:** Continuously validates `Taxable Subtotal + Taxes + Round Off == Grand Total` and offers 1-click auto-balancing.
-
-### 3. Dual Tally Integration (1-Click Push + File Export)
-- **Direct 1-Click HTTP Sync:** Posts vouchers directly into your active open company in TallyPrime / Tally.ERP 9 via Tally's built-in XML server on `http://127.0.0.1:9000`.
-- **Live Ledger Discovery:** Fetches real Sundry Creditors, Purchase Ledgers, and Tax Ledgers from Tally with instant auto-completion.
-- **1-Click Ledger Creation:** If a supplier ledger doesn't exist in Tally, create it in Tally with one click including their GSTIN and state!
-- **Tally XML Export (`.xml`):** Generates standard Tally envelope XML ready for manual import via `Import > Transactions`.
-- **Tally Excel Export (`.xlsx`):** Formatted spreadsheet ready for TallyPrime 4.0's native Excel import engine.
-- **Batch Processing:** Upload 10+ bills, run batch OCR in the background, and push all vouchers into Tally with a single click.
+- **100% Offline Local OCR (Air-Gapped):**
+  - Powered by local Tesseract.js WebAssembly.
+  - Zero financial or bill data ever leaves your computer. No cloud fees, API rate limits, or external privacy risks.
+- **Image Enhancement & Preprocessing:**
+  - Automated contrast normalization and binarization for low-quality photos.
+  - Interactive split-screen viewer with **Zoom**, **Pan**, **90° Rotation**, **High Contrast Mode**, and **Inverted / Negative Mode** (specifically tuned to read faded thermal cash receipts).
+- **Intelligent Indian GST & Invoice Engine:**
+  - **GSTIN & State Lookup:** Validates 15-character GST numbers and extracts 2-digit state codes (e.g. `27` Maharashtra, `29` Karnataka, `07` Delhi).
+  - **Intra-State vs Inter-State Auto-Routing:** Compares vendor state against your company state to route taxes into **CGST + SGST** (50/50) or **IGST** (100%).
+  - **Line Items & HSN/SAC Extraction:** Detects item description, HSN codes, quantity, unit rate, and tax slabs (0%, 5%, 12%, 18%, 28%).
+  - **Live Arithmetic Balancing:** Continuously validates `Taxable Subtotal + Taxes + Round Off == Grand Total` with 1-click auto-balancing.
+- **Dual Tally Integration:**
+  - **1-Click Direct HTTP Sync:** Pushes vouchers directly into your active open company in TallyPrime / Tally.ERP 9 on `http://127.0.0.1:9000`.
+  - **Live Ledger Autocomplete & 1-Click Creation:** Queries Tally for existing Sundry Creditors and Purchase ledgers. If a supplier does not exist in Tally, create it with 1 click including their GSTIN and State.
+  - **Tally XML File Export (`.xml`):** Generates standard Tally envelope XML ready for manual import via `Import > Transactions`.
+  - **Tally Excel Export (`.xlsx`):** Formatted spreadsheet ready for TallyPrime 4.0's native Excel import engine.
+- **Batch Processing Queue:**
+  - Upload 10+ bills at once, run OCR in the background, review balances, and batch push all vouchers into Tally in one single transaction.
+- **Built-in Realistic Sample Invoices & Mock Mode:**
+  - Includes ready-to-test Intra-State, Inter-State, and Retail Cash Memo bills.
+  - Toggle **Mock Mode** in Settings to test the entire application even when Tally is offline!
 
 ---
 
 ## 🛠️ How to Enable Tally XML Server on Windows
 
-To enable 1-Click Direct Sync, TallyPrime needs its built-in XML Server active:
+To use 1-Click Direct Sync, TallyPrime needs its built-in XML Server active:
 
-1. Open **TallyPrime** on your Windows PC.
-2. Press **F1 (Help)** > **Settings** > **Connectivity** (or in Tally.ERP 9: press **F12: Configure** > **Advanced Configuration**).
-3. Set **TallyPrime Act As:** to **Server** (or **Both**).
-4. Set **Port:** to `9000` (default).
-5. Accept changes and restart TallyPrime.
-6. Open your company in TallyPrime.
-7. In **TallyBillSync**, click **Test Connection** in the top bar. You'll see a green badge indicating connection!
-
-> **Note:** If Tally is not running on your computer, **TallyBillSync** includes a **Mock Mode** toggle in Settings, allowing you to simulate and test all workflows seamlessly.
+1. Open **TallyPrime** (or Tally.ERP 9) on your Windows computer.
+2. In TallyPrime:
+   - Click **F1 (Help)** > **Settings** > **Connectivity**.
+   - Set **TallyPrime Act As:** to **Server** (or **Both**).
+   - Set **Port:** to `9000` (default).
+3. In Tally.ERP 9:
+   - Press **F12: Configure** > **Advanced Configuration**.
+   - Set **Tally is acting as:** to **Server**.
+   - Set **Port:** to `9000`.
+4. Accept changes (`Ctrl + A`) and restart Tally.
+5. Open your company in Tally.
+6. In **TallyBillSync**, click **Test Connection** in the top bar. A green badge will confirm your active company!
 
 ---
 
-## 🚀 Getting Started (Development & Running)
+## 🚀 Installation & Usage
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm
+- Windows 10 / 11 (or macOS / Linux for development)
+- Node.js (v18.0.0 or higher) & npm
 
-### 1. Install Dependencies
+### Method 1: Download Windows Executable (.exe)
+Download the latest `TallyBillSync-Setup-x.x.x.exe` from the [GitHub Releases](https://github.com) page and double-click to install.
+
+### Method 2: Run via npx / npm CLI
+If published to npm, you can launch the app directly from your terminal:
 ```bash
-npm install
+npx tally-bill-sync
 ```
 
-### 2. Run in Development Mode
-To start the React frontend dev server:
-```bash
-npm run dev
-```
+### Method 3: Clone & Run from Source
 
-### 3. Run Unit Tests
-To verify GST calculations, OCR text parsing, and Tally XML generation:
-```bash
-npm test
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/<your-username>/tally-bill-sync.git
+   cd tally-bill-sync
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the application in Development Mode:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Run Automated Unit Tests:**
+   ```bash
+   npm test
+   ```
 
 ---
 
-## 📦 Building the Windows Application (.exe)
+## 📦 Building the Windows Standalone Installer (.exe)
 
-To build a standalone Windows Installer (`.exe` NSIS installer) and Portable executable:
+To build a standalone Windows Installer (`.exe` NSIS setup) and Portable executable on Windows:
 
 ```bash
 npm run build:win
 ```
 
-The compiled installer will be located in the `release/` directory:
+The output executables will be created in the `release/` folder:
 - `release/TallyBillSync-Setup-1.0.0.exe` (Windows NSIS Setup installer)
-- `release/TallyBillSync 1.0.0.exe` (Portable executable)
+- `release/TallyBillSync 1.0.0.exe` (Portable executable - runs without installation)
 
 ---
 
-## 📁 Project Structure
+## 🚀 Publishing to npm & GitHub Releases
+
+### 1. Automated GitHub Releases (Windows .exe)
+A GitHub Action workflow (`.github/workflows/build-and-release.yml`) is included. Whenever you push a git version tag:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+GitHub Actions will automatically spin up a `windows-latest` runner, compile the Windows `.exe` installer, and attach it to a new GitHub Release.
+
+### 2. Publishing to npm from GitHub
+An npm publishing workflow (`.github/workflows/npm-publish.yml`) is also included.
+
+1. Go to [npm](https://www.npmjs.com) > **Access Tokens** > Generate a **Publish Token** (Automation).
+2. In your GitHub repository:
+   - Go to **Settings** > **Secrets and variables** > **Actions**.
+   - Click **New repository secret**.
+   - Name: `NPM_TOKEN`
+   - Value: `<your npm token>`
+3. Whenever you create a Release on GitHub (or run the workflow manually), GitHub Actions will automatically publish the package to the npm registry!
+
+---
+
+## 📁 Architecture & File Layout
 
 ```
-quick-lavoisier-tally-importer/
+tally-bill-sync/
+├── .github/workflows/
+│   ├── ci.yml                 # Automated test & build verification on push/PR
+│   ├── build-and-release.yml  # Windows .exe builder and GitHub Releases publisher
+│   └── npm-publish.yml        # Automated npm registry publisher
+├── bin/
+│   └── cli.js                 # CLI launcher for `npx tally-bill-sync`
 ├── electron/
-│   ├── main.ts              # Electron main process (IPC, native dialogs, Tally HTTP proxy)
-│   └── preload.ts           # Context bridge exposing native methods
+│   ├── main.ts                # Electron window lifecycle, native dialogs, Tally HTTP proxy
+│   └── preload.ts             # Secure contextBridge API for IPC
 ├── src/
 │   ├── components/
-│   │   ├── Header.tsx       # Tally connection status pill & quick export buttons
-│   │   ├── Sidebar.tsx      # Bill inbox, status badges, and file uploader
-│   │   ├── ImageViewer.tsx  # Zoomable/rotatable preview with contrast filters
-│   │   ├── BillEditor.tsx   # Split-screen verification, line items, ledger mapping
+│   │   ├── Header.tsx         # Connection status pill & quick export buttons
+│   │   ├── Sidebar.tsx        # Bill inbox, status badges, and file uploader
+│   │   ├── ImageViewer.tsx    # Zoomable/rotatable preview with contrast filters
+│   │   ├── BillEditor.tsx     # Split-screen verification, line items, ledger mapping
 │   │   ├── BatchProcessor.tsx # Batch OCR queue & bulk Tally export modal
-│   │   ├── SettingsModal.tsx # Tally port, company, and default ledger settings
+│   │   ├── SettingsModal.tsx  # Tally port, company, and default ledger settings
 │   │   └── SampleBillsModal.tsx # Built-in realistic Indian GST invoices
 │   ├── services/
-│   │   ├── ocrService.ts    # 100% offline Tesseract OCR & canvas preprocessor
-│   │   └── tallyService.ts  # Tally XML HTTP client & ledger synchronizer
+│   │   ├── ocrService.ts      # 100% offline Tesseract OCR & canvas preprocessor
+│   │   └── tallyService.ts    # Tally XML HTTP client & ledger synchronizer
 │   ├── utils/
-│   │   ├── billParser.ts    # Rule-based regex parser for Indian bills & receipts
-│   │   ├── gstUtils.ts      # GST state codes, GSTIN check & tax computation
-│   │   ├── xmlGenerator.ts  # Tally XML envelope & voucher generator
-│   │   ├── excelExporter.ts # TallyPrime Excel import generator
-│   │   └── sampleBills.ts   # Built-in SVG vector invoice mockups
+│   │   ├── billParser.ts      # Rule-based regex parser for Indian bills & receipts
+│   │   ├── gstUtils.ts        # GST state codes, GSTIN check & tax computation
+│   │   ├── xmlGenerator.ts    # Tally XML envelope & voucher generator
+│   │   ├── excelExporter.ts   # TallyPrime Excel import generator
+│   │   └── sampleBills.ts     # Built-in SVG vector invoice mockups
 │   ├── types/
-│   │   └── index.ts         # TypeScript definitions
-│   ├── App.tsx              # Main application shell
-│   └── main.tsx             # React entry point
-├── tests/                   # Automated Vitest unit test suite
-├── electron-builder.yml     # Windows build & packaging configuration
-├── vite.config.ts           # Vite configuration
+│   │   └── index.ts           # TypeScript interfaces & definitions
+│   ├── App.tsx                # Main split-screen application shell
+│   └── main.tsx               # React DOM entry point
+├── tests/                     # 18 passing automated unit tests
+├── electron-builder.yml       # Windows build & packaging configuration
+├── vite.config.ts             # Vite configuration
 └── package.json
 ```
 
 ---
 
 ## 📄 License
-MIT
+This project is licensed under the [MIT License](LICENSE).
