@@ -3,7 +3,8 @@ import {
   generateTallyEnvelopeXml,
   generateCreateLedgerXml,
   generateExportLedgersXml,
-  generatePingCompanyXml
+  generatePingCompanyXml,
+  generateExportVouchersXml
 } from '../utils/xmlGenerator';
 
 /**
@@ -191,6 +192,243 @@ export class TallyService {
         success: false,
         message: `Sync Failed: ${err.message}. Make sure Tally is running on ${this.getUrl()}.`
       };
+    }
+  }
+
+  /**
+   * Fetches vouchers from Tally for export to GST Portal
+   */
+  async fetchVouchers(
+    fromDate: string = '2026-11-01',
+    toDate: string = '2026-11-30',
+    voucherType: string = 'Sales'
+  ): Promise<BillData[]> {
+    if (this.config.isMockMode) {
+      // Return realistic mock vouchers from Tally
+      return [
+        {
+          id: 'tally-vch-1',
+          fileName: 'Tally_Sales_INV-8812.xml',
+          imageUrl: '',
+          voucherType: 'Purchase',
+          invoiceNumber: 'INV-2026-8812',
+          invoiceDate: '2026-11-15',
+          supplierName: 'Apex Electronics Pvt Ltd',
+          supplierGstin: '27AAPFU0939F1ZV',
+          supplierState: 'Maharashtra',
+          supplierStateCode: '27',
+          partyLedgerName: 'Apex Electronics Pvt Ltd',
+          purchaseLedgerName: 'Sales Account',
+          taxLedgerCgst: 'Output CGST',
+          taxLedgerSgst: 'Output SGST',
+          taxLedgerIgst: 'Output IGST',
+          roundOffLedger: 'Round Off',
+          lineItems: [
+            {
+              id: 'item-1',
+              description: 'Industrial Barcode Scanner',
+              hsnCode: '8471',
+              quantity: 2,
+              unit: 'NOS',
+              rate: 4250.00,
+              taxableAmount: 8500.00,
+              gstRate: 18,
+              cgstAmount: 765.00,
+              sgstAmount: 765.00,
+              igstAmount: 0,
+              total: 10030.00
+            },
+            {
+              id: 'item-2',
+              description: 'Thermal Paper Rolls Pack',
+              hsnCode: '4802',
+              quantity: 10,
+              unit: 'NOS',
+              rate: 400.00,
+              taxableAmount: 4000.00,
+              gstRate: 18,
+              cgstAmount: 360.00,
+              sgstAmount: 360.00,
+              igstAmount: 0,
+              total: 4720.00
+            }
+          ],
+          taxableSubtotal: 12500.00,
+          cgstTotal: 1125.00,
+          sgstTotal: 1125.00,
+          igstTotal: 0,
+          roundOff: 0,
+          grandTotal: 14750.00,
+          narration: 'Sales invoice to Apex Electronics',
+          status: 'synced',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'tally-vch-2',
+          fileName: 'Tally_Sales_GTC-0419.xml',
+          imageUrl: '',
+          voucherType: 'Purchase',
+          invoiceNumber: 'GTC/26-27/0419',
+          invoiceDate: '2026-11-12',
+          supplierName: 'Global Tech Components',
+          supplierGstin: '29ABCDE1234F1Z5',
+          supplierState: 'Karnataka',
+          supplierStateCode: '29',
+          partyLedgerName: 'Global Tech Components',
+          purchaseLedgerName: 'Interstate Sales',
+          taxLedgerCgst: 'Output CGST',
+          taxLedgerSgst: 'Output SGST',
+          taxLedgerIgst: 'Output IGST',
+          roundOffLedger: 'Round Off',
+          lineItems: [
+            {
+              id: 'item-1',
+              description: 'Enterprise SSD Storage Module',
+              hsnCode: '8471',
+              quantity: 5,
+              unit: 'NOS',
+              rate: 10000.00,
+              taxableAmount: 50000.00,
+              gstRate: 18,
+              cgstAmount: 0,
+              sgstAmount: 0,
+              igstAmount: 9000.00,
+              total: 59000.00
+            }
+          ],
+          taxableSubtotal: 50000.00,
+          cgstTotal: 0,
+          sgstTotal: 0,
+          igstTotal: 9000.00,
+          roundOff: 0,
+          grandTotal: 59000.00,
+          narration: 'Interstate sale to Global Tech Components',
+          status: 'synced',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'tally-vch-3',
+          fileName: 'Tally_Sales_RET-109.xml',
+          imageUrl: '',
+          voucherType: 'Purchase',
+          invoiceNumber: 'RET-109',
+          invoiceDate: '2026-11-20',
+          supplierName: 'Walk-in Retail Customer',
+          supplierGstin: '', // Unregistered B2C
+          supplierState: 'Maharashtra',
+          supplierStateCode: '27',
+          partyLedgerName: 'Cash',
+          purchaseLedgerName: 'Sales Local',
+          taxLedgerCgst: 'Output CGST',
+          taxLedgerSgst: 'Output SGST',
+          taxLedgerIgst: 'Output IGST',
+          roundOffLedger: 'Round Off',
+          lineItems: [
+            {
+              id: 'item-1',
+              description: 'HDMI Cables & Connectors',
+              hsnCode: '8544',
+              quantity: 3,
+              unit: 'NOS',
+              rate: 600.00,
+              taxableAmount: 1800.00,
+              gstRate: 18,
+              cgstAmount: 162.00,
+              sgstAmount: 162.00,
+              igstAmount: 0,
+              total: 2124.00
+            }
+          ],
+          taxableSubtotal: 1800.00,
+          cgstTotal: 162.00,
+          sgstTotal: 162.00,
+          igstTotal: 0,
+          roundOff: 0,
+          grandTotal: 2124.00,
+          narration: 'Cash sale to counter customer',
+          status: 'synced',
+          createdAt: new Date().toISOString()
+        }
+      ];
+    }
+
+    try {
+      const xml = generateExportVouchersXml(fromDate, toDate, voucherType, this.config.companyName);
+      const text = await this.sendRequest(xml);
+      const vouchers: BillData[] = [];
+
+      const vchBlocks = text.match(/<VOUCHER[^>]*>[\s\S]*?<\/VOUCHER>/gi) || [];
+      for (const block of vchBlocks) {
+        const vchNumMatch = block.match(/<VOUCHERNUMBER[^>]*>([^<]+)<\/VOUCHERNUMBER>/i) || block.match(/<REFERENCE[^>]*>([^<]+)<\/REFERENCE>/i);
+        const dateMatch = block.match(/<DATE[^>]*>([^<]+)<\/DATE>/i);
+        const partyMatch = block.match(/<PARTYLEDGERNAME[^>]*>([^<]+)<\/PARTYLEDGERNAME>/i) || block.match(/<PARTYNAME[^>]*>([^<]+)<\/PARTYNAME>/i);
+        const gstinMatch = block.match(/<PARTYGSTIN[^>]*>([^<]+)<\/PARTYGSTIN>/i);
+        const stateMatch = block.match(/<STATENAME[^>]*>([^<]+)<\/STATENAME>/i);
+        const amountMatch = block.match(/<AMOUNT[^>]*>([^<]+)<\/AMOUNT>/i);
+
+        let vchDate = new Date().toISOString().split('T')[0];
+        if (dateMatch && dateMatch[1] && dateMatch[1].length === 8) {
+          const raw = dateMatch[1];
+          vchDate = `${raw.substring(0, 4)}-${raw.substring(4, 6)}-${raw.substring(6, 8)}`;
+        }
+
+        const partyName = partyMatch ? partyMatch[1].trim() : 'Customer / Vendor';
+        const gstin = gstinMatch ? gstinMatch[1].trim().toUpperCase() : '';
+        const stateName = stateMatch ? stateMatch[1].trim() : '';
+        const totalVal = amountMatch ? Math.abs(parseFloat(amountMatch[1])) || 0 : 0;
+        const taxableVal = Number((totalVal / 1.18).toFixed(2));
+        const taxVal = Number((totalVal - taxableVal).toFixed(2));
+        const isInter = gstin && gstin.substring(0, 2) !== this.config.companyStateCode;
+
+        vouchers.push({
+          id: `tally-vch-${Date.now()}-${Math.random()}`,
+          fileName: `Tally_${vchNumMatch ? vchNumMatch[1].trim() : 'Vch'}.xml`,
+          imageUrl: '',
+          voucherType: voucherType === 'Sales' ? 'Purchase' : 'Purchase',
+          invoiceNumber: vchNumMatch ? vchNumMatch[1].trim() : `VCH-${Date.now()}`,
+          invoiceDate: vchDate,
+          supplierName: partyName,
+          supplierGstin: gstin,
+          supplierState: stateName,
+          supplierStateCode: gstin ? gstin.substring(0, 2) : this.config.companyStateCode,
+          partyLedgerName: partyName,
+          purchaseLedgerName: isInter ? 'Interstate Sales' : 'Sales Local',
+          taxLedgerCgst: 'Output CGST',
+          taxLedgerSgst: 'Output SGST',
+          taxLedgerIgst: 'Output IGST',
+          roundOffLedger: 'Round Off',
+          lineItems: [
+            {
+              id: '1',
+              description: 'Goods / Services',
+              hsnCode: '9983',
+              quantity: 1,
+              unit: 'NOS',
+              rate: taxableVal,
+              taxableAmount: taxableVal,
+              gstRate: 18,
+              cgstAmount: isInter ? 0 : Number((taxVal / 2).toFixed(2)),
+              sgstAmount: isInter ? 0 : Number((taxVal / 2).toFixed(2)),
+              igstAmount: isInter ? taxVal : 0,
+              total: totalVal
+            }
+          ],
+          taxableSubtotal: taxableVal,
+          cgstTotal: isInter ? 0 : Number((taxVal / 2).toFixed(2)),
+          sgstTotal: isInter ? 0 : Number((taxVal / 2).toFixed(2)),
+          igstTotal: isInter ? taxVal : 0,
+          roundOff: 0,
+          grandTotal: totalVal,
+          narration: `Imported from Tally (${voucherType})`,
+          status: 'synced',
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      return vouchers;
+    } catch (e: any) {
+      console.error('Failed to export vouchers from Tally:', e);
+      return [];
     }
   }
 
