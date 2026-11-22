@@ -295,3 +295,40 @@ export function generatePingCompanyXml(): string {
   </BODY>
 </ENVELOPE>`;
 }
+
+/**
+ * Generates XML payload to query Tally for transactions / vouchers (e.g. Sales or Purchase vouchers)
+ */
+export function generateExportVouchersXml(
+  fromDate: string,
+  toDate: string,
+  voucherType: string = 'Sales',
+  companyName?: string
+): string {
+  const companyBlock = companyName
+    ? `
+          <SVCURRENTCOMPANY>${escapeXml(companyName)}</SVCURRENTCOMPANY>`
+    : '';
+
+  const fDate = formatTallyDate(fromDate);
+  const tDate = formatTallyDate(toDate);
+
+  return `<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Export Data</TALLYREQUEST>
+  </HEADER>
+  <BODY>
+    <EXPORTDATA>
+      <REQUESTDESC>
+        <REPORTNAME>Voucher Register</REPORTNAME>
+        <STATICVARIABLES>
+          <SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>
+          <SVFROMDATE>${fDate}</SVFROMDATE>
+          <SVTODATE>${tDate}</SVTODATE>
+          <VCHTYPE>${escapeXml(voucherType)}</VCHTYPE>${companyBlock}
+        </STATICVARIABLES>
+      </REQUESTDESC>
+    </EXPORTDATA>
+  </BODY>
+</ENVELOPE>`;
+}

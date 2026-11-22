@@ -7,7 +7,8 @@ import {
   CheckCircle2,
   AlertCircle,
   RefreshCw,
-  FolderOpen
+  FolderOpen,
+  Landmark
 } from 'lucide-react';
 import { TallyConfig } from '../types';
 
@@ -18,6 +19,7 @@ interface HeaderProps {
   onOpenSettings: () => void;
   onOpenBatch: () => void;
   onOpenSampleBills: () => void;
+  onOpenGstPortal: () => void;
   onExportAllXml: () => void;
   onExportAllExcel: () => void;
   onRefreshTally: () => void;
@@ -33,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenBatch,
   onOpenSampleBills,
+  onOpenGstPortal,
   onExportAllXml,
   onExportAllExcel,
   onRefreshTally,
@@ -112,6 +115,15 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Layers className="w-3.5 h-3.5 text-blue-400" />
           <span>Batch Queue ({totalBills})</span>
+        </button>
+
+        <button
+          onClick={onOpenGstPortal}
+          title="Export data to Government GST Portal (gst.gov.in) offline format"
+          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 text-teal-300 border border-teal-500/40 text-xs font-semibold transition-all shadow-sm"
+        >
+          <Landmark className="w-3.5 h-3.5 text-teal-400" />
+          <span>GST Portal</span>
         </button>
 
         <div className="h-5 w-px bg-slate-800 mx-1" />

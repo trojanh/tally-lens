@@ -6,6 +6,7 @@ import { BillEditor } from './components/BillEditor';
 import { BatchProcessor } from './components/BatchProcessor';
 import { SettingsModal } from './components/SettingsModal';
 import { SampleBillsModal } from './components/SampleBillsModal';
+import { GstPortalExportModal } from './components/GstPortalExportModal';
 import { BillData, TallyConfig, TallyLedger } from './types';
 import { TallyService } from './services/tallyService';
 import { performOfflineOcr } from './services/ocrService';
@@ -43,6 +44,7 @@ export const App: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showBatch, setShowBatch] = useState(false);
   const [showSampleModal, setShowSampleModal] = useState(false);
+  const [showGstModal, setShowGstModal] = useState(false);
 
   // Bills state
   const [bills, setBills] = useState<BillData[]>([]);
@@ -422,6 +424,7 @@ export const App: React.FC = () => {
         onOpenSettings={() => setShowSettings(true)}
         onOpenBatch={() => setShowBatch(true)}
         onOpenSampleBills={() => setShowSampleModal(true)}
+        onOpenGstPortal={() => setShowGstModal(true)}
         onExportAllXml={() => handleBatchExportXml(bills)}
         onExportAllExcel={() => handleBatchExportExcel(bills)}
         onRefreshTally={() => checkTallyConnection()}
@@ -504,6 +507,16 @@ export const App: React.FC = () => {
         <SampleBillsModal
           onSelectSample={handleSelectSample}
           onClose={() => setShowSampleModal(false)}
+        />
+      )}
+
+      {showGstModal && (
+        <GstPortalExportModal
+          bills={bills}
+          config={config}
+          tallyService={tallyService}
+          onClose={() => setShowGstModal(false)}
+          onNotify={notify}
         />
       )}
     </div>

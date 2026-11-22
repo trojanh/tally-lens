@@ -36,6 +36,11 @@ Entering purchase bills, expense receipts, and vendor cash memos into **Tally** 
   - **Live Ledger Autocomplete & 1-Click Creation:** Queries Tally for existing Sundry Creditors and Purchase ledgers. If a supplier does not exist in Tally, create it with 1 click including their GSTIN and State.
   - **Tally XML File Export (`.xml`):** Generates standard Tally envelope XML ready for manual import via `Import > Transactions`.
   - **Tally Excel Export (`.xlsx`):** Formatted spreadsheet ready for TallyPrime 4.0's native Excel import engine.
+- **GST Portal Export Utility (gst.gov.in):**
+  - **Official GSTR-1 JSON:** Generates compliant JSON ready for direct offline upload to the government GST Portal (`Returns Dashboard > GSTR-1 > Prepare Offline > Upload JSON`).
+  - **Official GST Offline Tool Excel:** Formatted 5-sheet workbook (`b2b`, `b2cl`, `b2cs`, `hsn`, `docs`) conforming to government offline schema.
+  - **Live Tally Data Extraction:** Pull live Sales / Purchase transactions directly from Tally on port 9000 by date range or export verified TallyLens bills.
+  - **GSTIN & HSN Pre-Validation:** Validates 15-character GSTIN checksums before filing to eliminate portal rejection errors.
 - **Batch Processing Queue:**
   - Upload 10+ bills at once, run OCR in the background, review balances, and batch push all vouchers into Tally in one single transaction.
 - **Built-in Realistic Sample Invoices & Mock Mode:**
@@ -60,6 +65,26 @@ To use 1-Click Direct Sync, TallyPrime needs its built-in XML Server active:
 4. Accept changes (`Ctrl + A`) and restart Tally.
 5. Open your company in Tally.
 6. In **TallyLens**, click **Test Connection** in the top bar. A green badge will confirm your active company!
+
+---
+
+## 🏛️ How to Export Tally Data to the GST Portal (gst.gov.in)
+
+1. Click the **GST Portal** button in the top navigation bar.
+2. Select your data source:
+   - **TallyLens Bills:** Export bills and receipts verified in the app.
+   - **Fetch from Tally (:9000):** Connect directly to your running TallyPrime to pull live **Sales (GSTR-1)** or **Purchase (GSTR-2B Recon)** vouchers for any chosen date range.
+3. Verify your **Filer GSTIN** and **Return Period** (e.g. Month: `11`, Year: `2026` -> FP: `112026`).
+4. Review the analytical health cards:
+   - **Table 4 (B2B):** Registered invoices grouped by recipient GSTIN.
+   - **Table 7 (B2CS):** Unregistered retail supplies grouped by Place of Supply and GST rate.
+   - **Table 12 (HSN):** Summary by HSN/SAC code, quantity, and tax breakdown.
+5. Click **Download GST Portal JSON (.json)** or **Export GST Offline Excel (.xlsx)**.
+6. Log in to **[gst.gov.in](https://gst.gov.in)**:
+   - Navigate to **Services > Returns > Returns Dashboard**.
+   - Select your Financial Year and Month, click **Search**.
+   - On **GSTR-1**, click **Prepare Offline** > **Upload** > **Choose File**.
+   - Select your generated JSON file and upload!
 
 ---
 
