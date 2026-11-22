@@ -90,6 +90,107 @@ export interface OCRProgress {
   progress: number;
 }
 
+// ==========================================
+// GST Portal (gst.gov.in) Export Interfaces
+// ==========================================
+
+export interface GSTR1ItemDetail {
+  num: number;
+  itm_det: {
+    txval: number; // Taxable value
+    rt: number;    // Tax rate % (e.g. 18)
+    iamt: number;  // IGST amount
+    camt: number;  // CGST amount
+    samt: number;  // SGST amount
+    csamt: number; // Cess amount
+  };
+}
+
+export interface GSTR1Invoice {
+  inum: string;    // Invoice number
+  idt: string;     // Invoice date in DD-MM-YYYY format
+  val: number;     // Invoice total value
+  pos: string;     // 2-digit Place of Supply state code
+  rchrg: 'Y' | 'N';// Reverse charge
+  inv_typ: 'R' | 'DE' | 'SEZWP' | 'SEZWOP'; // Invoice type (Regular default)
+  itms: GSTR1ItemDetail[];
+}
+
+export interface GSTR1B2BCounterparty {
+  ctin: string;    // Counterparty GSTIN
+  cpty?: string;
+  inv: GSTR1Invoice[];
+}
+
+export interface GSTR1B2CSItem {
+  sply_ty: 'INTER' | 'INTRA';
+  pos: string;
+  typ: 'OE';       // Other than e-commerce
+  rt: number;      // GST rate
+  txval: number;   // Taxable value
+  iamt: number;    // IGST
+  camt: number;    // CGST
+  samt: number;    // SGST
+  csamt: number;   // Cess
+}
+
+export interface GSTR1HSNItem {
+  num: number;
+  hsn_sc: string;  // HSN code
+  desc: string;    // Description
+  uqc: string;     // Unit quantity code e.g. NOS, KGS
+  qty: number;     // Total quantity
+  val: number;     // Total gross value
+  txval: number;   // Taxable value
+  iamt: number;    // IGST
+  camt: number;    // CGST
+  samt: number;    // SGST
+  csamt: number;   // Cess
+}
+
+export interface GSTR1DocDetail {
+  doc_num: number;
+  doc_typ: string;
+  docs: Array<{
+    num: number;
+    from: string;
+    to: string;
+    totnum: number;
+    canc: number;
+    net_issue: number;
+  }>;
+}
+
+export interface GSTR1Payload {
+  gstin: string;   // Filer's GSTIN
+  fp: string;      // Return period MMYYYY e.g. "112026"
+  gt: number;      // Gross turnover in preceding financial year
+  cur_gt: number;  // Current turnover
+  b2b: GSTR1B2BCounterparty[];
+  b2cs: GSTR1B2CSItem[];
+  hsn: {
+    data: GSTR1HSNItem[];
+  };
+  doc_issue: {
+    doc_det: GSTR1DocDetail[];
+  };
+}
+
+export interface GSTValidationReport {
+  totalInvoices: number;
+  b2bInvoicesCount: number;
+  b2csInvoicesCount: number;
+  validGstinCount: number;
+  invalidGstinCount: number;
+  invalidGstins: string[];
+  totalTaxableValue: number;
+  totalCgst: number;
+  totalSgst: number;
+  totalIgst: number;
+  totalInvoiceValue: number;
+  uniqueHsnCount: number;
+}
+
 export interface ElectronAPI {
   openFileDialog: () => Promise<string[] | null>;
   saveFileDialog: (defaultPath: string, extensions: string[]) => Promise<string | null>;
